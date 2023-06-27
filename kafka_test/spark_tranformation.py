@@ -19,7 +19,6 @@ status_pattern = r'\s(\d{3})\s'
 content_size_pattern = r'\s(\d+)$'
 
 # fucntion for parsing the time 
-import datetime
 
 from pyspark.sql.functions import udf
 

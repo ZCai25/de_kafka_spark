@@ -4,6 +4,7 @@ from pyspark.sql.types import *
 from datetime import datetime, timedelta
 from hdfs import InsecureClient
 # other needed packages
+from spark_tranformation import *
 
 
 # Kafka consumer settings
@@ -30,21 +31,25 @@ df = spark.readStream.format("kafka").options(**kafka_options).load()
 df = df.withColumn("value", col("value").cast("string"))
 
 # Extract the desired fields from the log line
-df = df.withColumn(
-    "ip_address",
-    regexp_extract(col("value"), r'^([\d.]+)', 1)
-).withColumn(
-    "timestamp",
-    regexp_extract(col("value"), r'\[([^:]+)', 1)
-).withColumn(
-    "year",
-    regexp_extract(col("timestamp"), r'(\d{4})', 1)
-…
-…
-….
+df = df.select(regexp_extract('value', host_pattern, 1).alias('host'),
+                regexp_extract('value', ts_pattern, 1).alias('timestamp'),
+                regexp_extract('value', method_uri_protocol_pattern, 1).alias('method'),
+                regexp_extract('value', method_uri_protocol_pattern, 2).alias('endpoint'),
+                regexp_extract('value', method_uri_protocol_pattern, 3).alias('protocol'),
+                regexp_extract('value', status_pattern, 1).cast('integer').alias('status'),
+                regexp_extract('value', content_size_pattern, 1).cast('integer').alias('content_size'))
 
-# Select the desired columns
-parsed_df = df.select("ip_address", "year", "month", "day", "hour", "minute", "method", "endpoint", "http_version", "response_code", "bytes")
+
+# Handling nulls in HTTP status
+df = df[df['status'].isNotNull()] 
+
+# Handling nulls in HTTP content size
+df = df.na.fill({'content_size': 0})
+
+# Handling timestamp using udf
+udf_parse_time = udf(parse_clf_time)
+
+parsed_df = df.select('*', udf_parse_time(df['timestamp']).cast('timestamp').alias('time')).drop('timestamp')
 
 # Process the Kafka messages and write to console and text file
 query = parsed_df.writeStream.outputMode("append").format("console").start()
@@ -58,8 +63,9 @@ while query.isActive:
     if elapsed_time > timedelta(seconds=10):
         query.stop()
 
-local_path = '/tmp/output/logs/' # an example
+local_path = './hdfs/' # an example
 
 w_query = parsed_df.writeStream.format("parquet").outputMode("append").option("checkpointLocation", '/tmp/output/ch').option("path", local_path).start()
 
 query.awaitTermination()
+
