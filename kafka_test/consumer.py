@@ -63,9 +63,27 @@ while query.isActive:
     if elapsed_time > timedelta(seconds=10):
         query.stop()
 
-local_path = './hdfs/' # an example
+        
+# Write the DataFrame to Parquet files
+# hdfs_path = "hdfs://localhost:9870/temp"
+# 
+# parquet_query = parsed_df.writeStream \
+#     .format("parquet") \
+#     .outputMode("append") \
+#     .option("checkpointLocation", "/tmp/output/ch") \
+#     .option("path", hdfs_path) \
+#     .start()
+# 
+# parquet_query.awaitTermination()
 
-w_query = parsed_df.writeStream.format("parquet").outputMode("append").option("checkpointLocation", '/tmp/output/ch').option("path", local_path).start()
+local_path = "./test/"
 
-query.awaitTermination()
+csv_query = parsed_df.writeStream \
+    .format("csv") \
+    .option("header", "true") \
+    .outputMode("append") \
+    .option("checkpointLocation", "/tmp/output/ch") \
+    .option("path", local_path) \
+    .start()
 
+csv_query.awaitTermination()
