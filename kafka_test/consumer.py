@@ -64,26 +64,39 @@ while query.isActive:
         query.stop()
 
         
-# Write the DataFrame to Parquet files
+# # Write the DataFrame to Parquet files
 # hdfs_path = "hdfs://localhost:9870/temp"
-# 
+
 # parquet_query = parsed_df.writeStream \
 #     .format("parquet") \
 #     .outputMode("append") \
 #     .option("checkpointLocation", "/tmp/output/ch") \
 #     .option("path", hdfs_path) \
 #     .start()
-# 
+
 # parquet_query.awaitTermination()
+hdfs_path = "hdfs://localhost:9000/test"
 
-local_path = "./test/"
-
-csv_query = parsed_df.writeStream \
-    .format("csv") \
-    .option("header", "true") \
+parquet_query = parsed_df.writeStream \
+    .format("parquet") \
     .outputMode("append") \
-    .option("checkpointLocation", "/tmp/output/ch") \
-    .option("path", local_path) \
+    .option("checkpointLocation", "/tmp/output/ch-parquet") \
+    .option("path", hdfs_path) \
+    .trigger(processingTime="10 minutes") \
     .start()
 
-csv_query.awaitTermination()
+parquet_query.awaitTermination()
+
+
+# local_path = "./data/test/"
+
+# csv_query = parsed_df.writeStream \
+#     .format("csv") \
+#     .option("header", "true") \
+#     .outputMode("append") \
+#     .option("checkpointLocation", "/tmp/output/ch") \
+#     .option("path", local_path) \
+#     .trigger(processingTime="10 seconds") \
+#     .start()
+
+# csv_query.awaitTermination()
