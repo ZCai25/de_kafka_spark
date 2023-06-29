@@ -64,8 +64,6 @@ while query.isActive:
     elapsed_time = datetime.now() - start_time
     if elapsed_time > timedelta(seconds=10):
         query.stop()
-
-<<<<<<< HEAD
         
 # # Write the DataFrame to Parquet files
 # hdfs_path = "hdfs://localhost:9870/temp"
