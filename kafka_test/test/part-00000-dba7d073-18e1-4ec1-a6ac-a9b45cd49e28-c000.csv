@@ -1,2 +1,0 @@
-host,method,endpoint,protocol,status,content_size,time
-188.181.231.144,GET,/Archives/edgar/data/000132756719000032/0001327567-19-000032-index.html,HTTP/1.0,404,24938,2118-12-26T12:00:00.000-08:00

@@ -6,7 +6,7 @@ from confluent_kafka import Producer
 brokers = 'localhost:9092'
 topic = 'log_lines_topic'
 
-dataset = '42MBSmallServerLog.log'
+dataset = '../../dataset/2GBFIle.log'
 
 
 # Set up the Kafka producer
@@ -23,7 +23,7 @@ def callback(err, event):
         print(f'{val} sent to partition {event.partition()}.')
 
 if __name__ == '__main__':
-    batch_size = 1000  # Adjust this value based on requirements
+    batch_size = 100000  # Adjust this value based on requirements
 
     # Open the log file
     with open(dataset, 'r') as file:
