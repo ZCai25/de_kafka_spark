@@ -78,7 +78,7 @@ while query.isActive:
 # parquet_query.awaitTermination()
 hdfs_path = "hdfs://localhost:9000/test"
 
-parquet_query = parsed_df.writeStream \
+parquet_query = df.writeStream \
     .format("parquet") \
     .outputMode("append") \
     .option("checkpointLocation", "/tmp/output/ch-parquet") \
@@ -91,7 +91,7 @@ parquet_query.awaitTermination()
 
 # local_path = "./data/test/"
 
-# csv_query = parsed_df.writeStream \
+# csv_query = df.writeStream \
 #     .format("csv") \
 #     .option("header", "true") \
 #     .outputMode("append") \
