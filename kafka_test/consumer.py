@@ -103,23 +103,3 @@ parquet_query.awaitTermination()
 #     .start()
 
 # csv_query.awaitTermination()
-=======
-save_hdfs = False
-if save_hdfs:
-    hdfs_path = "http://localhost:9870/temp"
-    #hdfs_path = "./test2/"
-    parquet_query = df.writeStream.format("parquet").outputMode("append").option("checkpointLocation", '/tmp/output/ch').option("path", hdfs_path).start()
-    parquet_query.awaitTermination()
-
-save_local = True
-if save_local:
-    local_path = "./test/"
-    csv_query = repartitioned_df.writeStream \
-        .format("csv") \
-        .option("header", "true") \
-        .outputMode("append") \
-        .option("checkpointLocation", "./tmp") \
-        .option("path", local_path) \
-        .start()
-    csv_query.awaitTermination()
->>>>>>> b62b0baba0dcf69b016781344e71bb320b23fa33
