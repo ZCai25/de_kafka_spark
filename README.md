@@ -1,5 +1,5 @@
 # de_hw_kafka_spark
-data engineering class projects for log analytics using kafka and spark
+data engineering project for log analytics using kafka and spark
 
 # run kafka producer in terminal 
 - python producer.py
