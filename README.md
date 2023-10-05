@@ -1,6 +1,8 @@
-# de_hw_kafka_spark
-data engineering project for log analytics using kafka and spark
+## 🧐 About <a name = "about"></a>
+This is a data engineering project for log analytics using kafka and spark
 
+## 🏁 Getting Started <a name = "getting_started"></a>
+To get started and runing this program
 # run kafka producer in terminal 
 - python producer.py
 # run spark streaming script to consume the log files 
