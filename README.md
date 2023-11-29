@@ -12,6 +12,6 @@ To get started and runing this program
 # run spark streaming script to consume the log files 
 - spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1 consumer_2gb.py
 
-## visulization results
+## Visualization results
 
-## conclusion
+## Conclusion
